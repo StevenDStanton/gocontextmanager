@@ -1,4 +1,4 @@
-module github.com/StevenDStanton/GoContextManager
+module github.com/StevenDStanton/gocontextmanager
 
 go 1.22.2
 
