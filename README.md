@@ -16,22 +16,40 @@ package main
 
 import (
 	"fmt"
-	"github.com/yourusername/gocontextmanager"
+	"github.com/StevenDStanton/gocontextmanager" // ensure the import is correct
 )
 
 func main() {
-	// Create a new ContextManager instance
 	cm := gocontextmanager.NewContextManager()
 
-	// Add messages to a context
-	cm.AddContext("testID", "Message 1")
-	cm.AddContext("testID", "Message 2")
+	// Adding messages to a specific context with additional user details
+	cm.AddContext("testID", "Hello, World!", "user", "u123", "GlobalUser123", "John Doe")
+	cm.AddContext("testID", "How are you today?", "assistant", "a456", "GlobalAssistant", "ChatBot")
 
-	// Get messages for a context
+	// Retrieving messages from a context
 	messages := cm.GetContext("testID")
-	fmt.Println(messages)
+	for _, msg := range messages {
+		fmt.Printf("Message: %s, Role: %s, UserID: %s, UserName: %s\n", msg.content, msg.role, msg.userID, msg.userName)
+	}
 }
 
+```
+
+## Update
+
+Update the require
+
+```go
+require (
+    github.com/yourusername/gocontextmanager v2.0.0
+)
+```
+
+Then run
+
+```bash
+go mod tidy
+go mod verify
 ```
 
 ## Testing
