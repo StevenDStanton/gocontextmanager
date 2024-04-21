@@ -4,7 +4,19 @@ import (
 	"sync"
 )
 
-var MAX_MESSAGES_PER_CONTEXT = 25
+const maxMessagesPerContext = 25
+
+type message struct {
+	content        string
+	role           string
+	userID         string
+	userGlobalName string
+	userName       string
+}
+
+type context struct {
+	messages []message
+}
 
 type ContextManager struct {
 	contexts sync.Map
@@ -14,26 +26,37 @@ func NewContextManager() *ContextManager {
 	return &ContextManager{}
 }
 
-func (cm *ContextManager) AddContext(id string, message string) {
+func (cm *ContextManager) AddContext(id string, content string, userRole string, userID string, globalName string, name string) {
 	value, ok := cm.contexts.Load(id)
 	if !ok {
-		cm.contexts.Store(id, []string{message})
+		cm.contexts.Store(id, context{messages: []message{{
+			content:        content,
+			role:           userRole,
+			userID:         userID,
+			userGlobalName: globalName,
+			userName:       name,
+		}}})
 		return
 	}
 
-	messages, _ := value.([]string)
-	if len(messages) >= MAX_MESSAGES_PER_CONTEXT {
-		messages = messages[1:]
+	existingContext, _ := value.(context)
+	if len(existingContext.messages) >= maxMessagesPerContext {
+		existingContext.messages = existingContext.messages[1:]
 	}
-
-	messages = append(messages, message)
-	cm.contexts.Store(id, messages)
+	existingContext.messages = append(existingContext.messages, message{
+		content:        content,
+		role:           userRole,
+		userID:         userID,
+		userGlobalName: globalName,
+		userName:       name,
+	})
+	cm.contexts.Store(id, existingContext)
 }
 
-func (cm *ContextManager) GetContext(id string) []string {
+func (cm *ContextManager) GetContext(id string) []message {
 	value, ok := cm.contexts.Load(id)
 	if !ok {
-		return []string{}
+		return nil
 	}
-	return value.([]string)
+	return value.(context).messages
 }
