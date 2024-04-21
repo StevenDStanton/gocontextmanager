@@ -41,7 +41,7 @@ Update the require
 
 ```go
 require (
-    github.com/yourusername/gocontextmanager v2.0.0
+    github.com/yourusername/gocontextmanager/v2 v2.0.0
 )
 ```
 
