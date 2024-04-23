@@ -6,7 +6,7 @@ import (
 
 const maxMessagesPerContext = 25
 
-type message struct {
+type Message struct {
 	content        string
 	role           string
 	userID         string
