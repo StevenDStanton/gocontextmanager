@@ -15,7 +15,7 @@ type Message struct {
 }
 
 type context struct {
-	messages []message
+	messages []Message
 }
 
 type ContextManager struct {
@@ -29,7 +29,7 @@ func NewContextManager() *ContextManager {
 func (cm *ContextManager) AddContext(id string, content string, userRole string, userID string, globalName string, name string) {
 	value, ok := cm.contexts.Load(id)
 	if !ok {
-		cm.contexts.Store(id, context{messages: []message{{
+		cm.contexts.Store(id, context{messages: []Message{{
 			content:        content,
 			role:           userRole,
 			userID:         userID,
@@ -43,7 +43,7 @@ func (cm *ContextManager) AddContext(id string, content string, userRole string,
 	if len(existingContext.messages) >= maxMessagesPerContext {
 		existingContext.messages = existingContext.messages[1:]
 	}
-	existingContext.messages = append(existingContext.messages, message{
+	existingContext.messages = append(existingContext.messages, Message{
 		content:        content,
 		role:           userRole,
 		userID:         userID,
@@ -53,7 +53,7 @@ func (cm *ContextManager) AddContext(id string, content string, userRole string,
 	cm.contexts.Store(id, existingContext)
 }
 
-func (cm *ContextManager) GetContext(id string) []message {
+func (cm *ContextManager) GetContext(id string) []Message {
 	value, ok := cm.contexts.Load(id)
 	if !ok {
 		return nil
